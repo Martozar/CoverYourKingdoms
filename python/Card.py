@@ -10,7 +10,8 @@ class CreatureType(Enum):
 
 class Card(Movable):
 
-    def __init__(self, name: str):
+    def __init__(self, name: str, location=None):
+        super().__init__()
         self.name = name
 
     def __str__(self):
@@ -22,8 +23,8 @@ class Card(Movable):
 
 class CreatureCard(Card):
 
-    def __init__(self, name: str, value: int, type: CreatureType, ability: Ability):
-        super().__init__(name)
+    def __init__(self, name: str, value: int, type: CreatureType, ability: Ability, location=None):
+        super().__init__(name, location)
         self.value = value
         self.ability = ability
         self.type = type

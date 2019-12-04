@@ -18,7 +18,7 @@ class Game:
         self.deck = deck
         self.players = players
         for p in self.players:
-            p.draw_oppenning(self.deck)
+            p.replenish_hand(self.deck)
 
     def isFinished(self):
         if self.deck.isEmpty():
@@ -35,6 +35,7 @@ class Game:
                 print("What action you want to take?")
                 print("1 - create clan")
                 print("2 - discard and draw")
+                print("3 - add creature")
                 line = sys.stdin.readline()
                 if int(line) == 1:
                     if Action.CreateClanAction.isAvailable(self):
@@ -42,9 +43,13 @@ class Game:
                 if int(line) == 2:
                     if Action.DiscardAndDraw.isAvailable(self):
                         Action.DiscardAndDraw.take_action(self)
+                if int(line) == 3:
+                    if Action.AddCreature.isAvailable(self):
+                        Action.AddCreature.take_action(self)
                 print("Replenishing all players hand")
                 for p in self.players:
                     p.replenish_hand(self.deck)
+                print(player.get_points())
 
 
 

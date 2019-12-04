@@ -6,6 +6,8 @@ class Deck:
 
     def initialize(self, cards_list: list):
         self.cards = cards_list
+        for card in self.cards:
+            card.location = self.cards
 
     def isEmpty(self):
         return self.empty

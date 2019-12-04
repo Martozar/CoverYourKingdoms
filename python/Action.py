@@ -12,8 +12,28 @@ class Action(ABC):
         pass
 
     @abstractmethod
+    def undo(game: Game, target_player: Player, card: Card):
+        pass
+
+    @abstractmethod
     def isAvailable(game: Game, target_player: Player):
         pass
+
+class AddCreature(Action):
+
+    def isAvailable(game: Game, target_player=None):
+        for c in game.current_player.hand:
+            if c.name == game.current_player.kingdom.clans[0].creatures[0].name:
+                return True
+        return False
+
+    def take_action(game: Game, target_player=None, card=None):
+        available = [c for c in game.current_player.hand if c.name == game.current_player.kingdom.clans[0].creatures[0].name]
+        print("Which card you want to add?")
+        print(available)
+        card = int(sys.stdin.readline())
+        card = available[card]
+        card.move(card.location, game.current_player.kingdom.clans[0].creatures, 1)
 
 
 class DiscardAndDraw(Action):
@@ -23,7 +43,7 @@ class DiscardAndDraw(Action):
             return False
         return True
 
-    def take_action(game: Game, target_player=None):
+    def take_action(game: Game, target_player=None, card=None):
         print("Which card you want to discard?")
         print(game.current_player.hand)
         card = int(sys.stdin.readline())
@@ -32,6 +52,7 @@ class DiscardAndDraw(Action):
         game.current_player.draw(game.deck)
         print(game.current_player.hand)
 
+
 class CreateClanAction(Action):
 
     def isAvailable(game: Game, target_player=None):
@@ -39,25 +60,39 @@ class CreateClanAction(Action):
             for j in range(i+1, len(game.current_player.hand)):
                 if game.current_player.hand[i].name == game.current_player.hand[j].name:
                     return True
+                if game.discard_pile and game.current_player.hand[i].name == game.discard_pile[0]:
+                    return True
         return False
 
     def take_action(game: Game, target_player=None):
-        print("Available creatures: ")
-        print(game.current_player.hand)
         print("Chose 2 different creatures with the same name")
-        while True:
-            creatures = sys.stdin.readline().split(" ")
-            if len(creatures) != 2:
-                print("Chose 2 creatures!")
-                continue
-            creatures = [int(creatures[i]) for i in range(len(creatures))]
-            if creatures[0] == creatures[1]:
-                print("Chose different creatures!")
-                continue
-            if game.current_player.hand[creatures[0]].name != game.current_player.hand[creatures[1]].name:
-                print("Not the creatures with the same name!")
-                continue
-            else:
-                break
-        game.current_player.add_clan([game.current_player.hand[creatures[0]], game.current_player.hand[creatures[1]]])
-        print(game.current_player.hand)
+        chosen = []
+        available = []
+        while len(chosen) < 2:
+            if len(chosen) == 0:
+                print("Choose a card in your hand:")
+                print(game.current_player.hand)
+                card = int(sys.stdin.readline())
+                chosen.append(game.current_player.hand[card])
+                available = game.current_player.hand + ([] if not game.discard_pile else [game.discard_pile[0]])
+                available = [c for c in available if c.name == chosen[0].name and c != chosen[0]]
+                if not available:
+                    print("Choose another creature!")
+                    chosen = []
+                    continue
+            if len(chosen) == 1:
+                print("Choose a card in your hand{}:".format("" if not game.discard_pile else " or discard_pile"))
+                print(available)
+                card = int(sys.stdin.readline())
+                chosen.append(available[card])
+            if len(chosen) == 2:
+                game.current_player.add_clan([chosen[0], chosen[1]])
+            # creatures = [int(creatures[i]) for i in range(len(creatures))]
+            # if creatures[0] == creatures[1]:
+            #     print("Chose different creatures!")
+            #     continue
+            # if game.current_player.hand[creatures[0]].name != game.current_player.hand[creatures[1]].name:
+            #     print("Not the creatures with the same name!")
+            #     continue
+            # else:
+            #     break

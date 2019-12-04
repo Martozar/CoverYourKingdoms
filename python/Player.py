@@ -10,6 +10,9 @@ class Player:
     def set_kingdom(self, name):
         self.kingdom = Kindgom(name)
 
+    def get_points(self):
+        return self.kingdom.get_points()
+
     def draw(self, deck: Deck):
         card = deck.draw()
         if card:
@@ -18,13 +21,8 @@ class Player:
     def discard(self, discard_pile, card):
         card.move(self.hand, discard_pile)
 
-
     def replenish_hand(self, deck):
         for _ in range(6 - len(self.hand)):
-            self.draw(deck)
-
-    def draw_oppenning(self, deck: Deck):
-        for i in range(6):
             self.draw(deck)
 
     def emptyHand(self):
@@ -33,5 +31,5 @@ class Player:
     def add_clan(self, creatures: list):
         clan = Clan()
         for c in creatures:
-            c.move(self.hand, clan.creatures)
-        self.kingdom.add_clan(c)
+            c.move(c.location, clan.creatures)
+        self.kingdom.add_clan(clan)
