@@ -27,7 +27,9 @@ class DiscardAndDraw(Action):
         print("Which card you want to discard?")
         print(game.current_player.hand)
         card = int(sys.stdin.readline())
-        game.current_player.discard(game.discard_pile, card)
+        game.current_player.discard(game.discard_pile, game.current_player.hand[card])
+        print(game.current_player.hand)
+        game.current_player.draw(game.deck)
         print(game.current_player.hand)
 
 class CreateClanAction(Action):
@@ -58,4 +60,4 @@ class CreateClanAction(Action):
             else:
                 break
         game.current_player.add_clan([game.current_player.hand[creatures[0]], game.current_player.hand[creatures[1]]])
-        game.current_player.hand = [game.current_player.hand[i] for i in range(len(game.current_player.hand)) if i not in creatures]
+        print(game.current_player.hand)

@@ -1,7 +1,6 @@
 from Card import Card, CreatureCard, CreatureType
 from Player import Player
 from Deck import Deck
-from Interfaces import Deletable, ExpandableAndDeletable
 
 import sys
 import Action
@@ -12,7 +11,7 @@ class Game:
     def __init__(self):
         self.current_player = None
         self.deck = None
-        self.discard_pile = ExpandableAndDeletable()
+        self.discard_pile = list()
         self.players = []
 
     def initialize(self, deck, players):
