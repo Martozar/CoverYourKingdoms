@@ -1,19 +1,14 @@
 from Card import CreatureCard
+from Interfaces import Movable, Expandable
 
 
-class Clan:
+class Clan(Movable, Expandable):
 
     def __init__(self, creature_cards: list):
-        self.creatures = creature_cards
+        self.container = creature_cards
 
-    def add(self, creature_card: CreatureCard):
-        self.creatures.insert(0, creature_card)
-        
-class Kindgom:
+class Kindgom(Expandable):
 
     def __init__(self, name):
+        super().__init__()
         self.name = name
-        self.clans = []
-
-    def add_clan(self, clan: Clan):
-        self.clans.insert(0, clan)

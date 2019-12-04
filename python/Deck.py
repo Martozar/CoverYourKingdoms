@@ -1,15 +1,24 @@
-class Deck:
+from Interfaces import Deletable
+
+class Deck(Deletable):
 
     def __init__(self):
-        self.cards = []
+        super().__init__()
+        self.empty = False
 
     def initialize(self, cards_list: list):
-        self.cards = cards_list
+        self.container = cards_list
+
+    def isEmpty(self):
+        return self.empty
 
     def draw(self):
-        if len(self.cards) == 0:
-            print("Draw deck is empty")
+        if self.empty:
+            print("Nothing to draw!")
             return None
-        card = self.cards[0]
-        self.cards = self.cards[1:]
+        card = self.container[0]
+        self.delete(card)
+        if len(self.container) == 0:
+            print("Draw deck is empty")
+            self.empty = True
         return card
