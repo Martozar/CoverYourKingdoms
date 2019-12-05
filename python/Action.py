@@ -19,9 +19,19 @@ class Action(ABC):
     def isAvailable(game: Game, target_player: Player):
         pass
 
+    @abstractmethod
+    def getName():
+        pass
+
+
 class AddCreature(Action):
 
+    def getName():
+        return "Add Creature"
+
     def isAvailable(game: Game, target_player=None):
+        if not game.current_player.kingdom.clans:
+            return False
         for c in game.current_player.hand:
             if c.name == game.current_player.kingdom.clans[0].creatures[0].name:
                 return True
@@ -37,6 +47,9 @@ class AddCreature(Action):
 
 
 class DiscardAndDraw(Action):
+
+    def getName():
+        return "Discard And Draw"
 
     def isAvailable(game: Game, target_player=None):
         if game.current_player.emptyHand():
@@ -54,6 +67,9 @@ class DiscardAndDraw(Action):
 
 
 class CreateClanAction(Action):
+
+    def getName():
+        return "Create Clan Action"
 
     def isAvailable(game: Game, target_player=None):
         for i in range(len(game.current_player.hand)):
